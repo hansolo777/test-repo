@@ -27,6 +27,7 @@ let state = initialState();
 
 const els = {
   scoreGrid: document.getElementById('score-grid'),
+  nameEditor: document.getElementById('name-editor'),
   playerSwitch: document.getElementById('player-switch'),
   ballButtons: document.getElementById('ball-buttons'),
   foulButtons: document.getElementById('foul-buttons'),
@@ -76,12 +77,29 @@ function nextExpectedText() {
   return ENDGAME_ORDER.find((key) => !state.colorsCleared.includes(key)) || 'Frame complete';
 }
 
+function sanitizeName(value, fallback) {
+  return value.trim() || fallback;
+}
+
+function escapeHtml(value) {
+  return value
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('\"', '&quot;');
+}
+
+function updatePlayerName(index, value) {
+  state.players[index].name = sanitizeName(value, `Player ${index + 1}`);
+  render();
+}
+
 function render() {
   els.scoreGrid.innerHTML = state.players
     .map(
       (player, index) => `
         <article class="player-card ${index === state.activePlayer ? 'active' : ''}">
-          <p class="label">${player.name}</p>
+          <p class="label">${escapeHtml(player.name)}</p>
           <div class="score">${player.score}</div>
           <p class="break">Current break: ${player.currentBreak}</p>
           <p class="muted">Best break: ${player.bestBreak}</p>
@@ -89,9 +107,19 @@ function render() {
     )
     .join('');
 
+  els.nameEditor.innerHTML = state.players
+    .map(
+      (player, index) => `
+        <label>
+          <span>Player name</span>
+          <input data-name-input="${index}" value="${escapeHtml(player.name)}" maxlength="24" />
+        </label>`,
+    )
+    .join('');
+
   els.playerSwitch.innerHTML = state.players
     .map(
-      (player, index) => `<button class="${index === state.activePlayer ? 'active' : ''}" data-player="${index}">${player.name} to play</button>`,
+      (player, index) => `<button class="${index === state.activePlayer ? 'active' : ''}" data-player="${index}">${escapeHtml(player.name)} to play</button>`,
     )
     .join('');
 
@@ -193,3 +221,10 @@ document.getElementById('miss-toggle').addEventListener('click', () => {
 });
 
 render();
+
+
+document.addEventListener('input', (event) => {
+  const index = event.target.dataset.nameInput;
+  if (index === undefined) return;
+  updatePlayerName(Number(index), event.target.value);
+});
