@@ -91,7 +91,6 @@ function escapeHtml(value) {
 
 function updatePlayerName(index, value) {
   state.players[index].name = sanitizeName(value, `Player ${index + 1}`);
-  render();
 }
 
 function render() {
@@ -223,8 +222,16 @@ document.getElementById('miss-toggle').addEventListener('click', () => {
 render();
 
 
-document.addEventListener('input', (event) => {
+document.addEventListener('change', (event) => {
   const index = event.target.dataset.nameInput;
   if (index === undefined) return;
   updatePlayerName(Number(index), event.target.value);
+  render();
+});
+
+document.addEventListener('keydown', (event) => {
+  const index = event.target.dataset.nameInput;
+  if (index === undefined || event.key !== 'Enter') return;
+  updatePlayerName(Number(index), event.target.value);
+  event.target.blur();
 });
