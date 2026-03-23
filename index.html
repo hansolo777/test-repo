@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Simple Snooker Scoring</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app">
+      <section class="panel header">
+        <div>
+          <p class="eyebrow">Very simple web app</p>
+          <h1>Snooker Scoring</h1>
+          <p class="muted">
+            Minimal scoreboard for two players with break tracking, frame points, foul shortcuts,
+            and a tiny rules summary.
+          </p>
+        </div>
+        <button id="reset-frame" class="ghost">Reset frame</button>
+      </section>
+
+      <section class="layout">
+        <section class="panel scoreboard">
+          <div class="score-grid" id="score-grid"></div>
+          <div class="status-row">
+            <div>
+              <span class="label">Reds left</span>
+              <strong id="reds-left">15</strong>
+            </div>
+            <div>
+              <span class="label">Current phase</span>
+              <strong id="phase">Red first</strong>
+            </div>
+            <div>
+              <span class="label">Next expected</span>
+              <strong id="next-ball">Red</strong>
+            </div>
+            <div>
+              <span class="label">Value remaining</span>
+              <strong id="remaining-points">147</strong>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel controls">
+          <h2>Score action</h2>
+          <div class="player-switch" id="player-switch"></div>
+
+          <div class="action-group">
+            <h3>Pot a ball</h3>
+            <div class="ball-buttons" id="ball-buttons"></div>
+          </div>
+
+          <div class="action-group">
+            <h3>Foul points to opponent</h3>
+            <div class="foul-buttons" id="foul-buttons"></div>
+          </div>
+
+          <div class="action-group small-actions">
+            <button id="miss-toggle" class="ghost">Toggle miss marker</button>
+            <button id="end-break" class="ghost">End break / switch player</button>
+            <button id="undo" class="ghost">Undo</button>
+          </div>
+
+          <div class="panel note">
+            <h3>Very brief modules/features</h3>
+            <ul>
+              <li>Frame scoreboard for two players.</li>
+              <li>Break tracker and turn switching.</li>
+              <li>Simple pot/foul actions based on snooker order.</li>
+              <li>Compact rules helper for what to score next.</li>
+            </ul>
+          </div>
+        </section>
+      </section>
+
+      <section class="panel rules">
+        <h2>Simple rules used here</h2>
+        <ul>
+          <li>Start with 15 reds. Potting a red gives 1 point and then a color is expected.</li>
+          <li>While reds remain, colors score and are re-spotted, then play returns to a red.</li>
+          <li>After all reds are gone, colors are potted in order: yellow, green, brown, blue, pink, black.</li>
+          <li>Fouls award 4, 5, 6, or 7 points to the opponent.</li>
+        </ul>
+        <p class="muted" id="event-log">Ready to start the frame.</p>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
